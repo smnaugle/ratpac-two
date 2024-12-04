@@ -24,6 +24,12 @@ jobs:
         source /ratpac-setup/env.sh
         make -j$(nproc)
 
+    - name: List files
+      run: |
+        pwd
+        ls
+        ls ratpac2/install
+
     - name: Cache build output
       id: cache
       uses: actions/cache/save@v4
@@ -33,6 +39,7 @@ jobs:
   
   acrylic_attenuation:
     runs-on: ubuntu-latest
+    needs: build
     container: 
       image: ratpac/ratpac-two:latest-base
       options: --user root
