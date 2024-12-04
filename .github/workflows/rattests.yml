@@ -25,12 +25,11 @@ jobs:
         make -j$(nproc)
 
     - name: Cache build output
-      working-directory: ratpac2
       id: cache
       uses: actions/cache/save@v4
       with:
         key: ${{ github.sha }}-install
-        path: install
+        path: ratpac2/install
   
   acrylic_attenuation:
     runs-on: ubuntu-latest
@@ -39,11 +38,10 @@ jobs:
       options: --user root
     steps:
     - name: Get build cache
-      working-directory: ratpac2
       id: cache
       uses: actions/cache/restore@v4
       with:
-        path: install
+        path: ratpac2/install
         key: ${{ github.sha }}-install
 
     - name: Run acrylic rattest 
@@ -56,14 +54,13 @@ jobs:
       id: test
       continue-on-error: true
     - name: upload-result
-      working-directory: ratpac2
       uses: actions/upload-artifact@v4
       with:
         name: acrylic_attenuation-result
         if-no-files-found: error
         path: |
-          test/full/acrylic_attenuation/*.png
-          test/full/acrylic_attenuation/*.html
+          ratpac2/test/full/acrylic_attenuation/*.png
+          ratpac2/test/full/acrylic_attenuation/*.html
     - name: check-test-result
       if: steps.test.outcome != 'success'
       run: exit 1 
