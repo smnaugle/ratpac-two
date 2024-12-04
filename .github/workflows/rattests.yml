@@ -27,15 +27,17 @@ jobs:
     - name: List files
       run: |
         pwd
+        echo "\n"
         ls
-        ls ratpac2/install
+        echo "\n"
+        ls ratpac2
 
     - name: Cache build output
       id: cache
       uses: actions/cache/save@v4
       with:
         key: ${{ github.sha }}-install
-        path: ratpac2/install
+        path: ratpac2
   
   acrylic_attenuation:
     runs-on: ubuntu-latest
@@ -44,13 +46,27 @@ jobs:
       image: ratpac/ratpac-two:latest-base
       options: --user root
     steps:
+    - name: List files
+      run: |
+        pwd
+        echo "\n"
+        ls
+
     - name: Get build cache
       id: cache
       uses: actions/cache/restore@v4
       with:
-        path: ratpac2/install
+        path: ratpac2
         key: ${{ github.sha }}-install
-
+        
+    - name: List files
+      run: |
+        pwd
+        echo "\n"
+        ls
+        echo "\n"
+        ls ratpac2
+        
     - name: Run acrylic rattest 
       working-directory: ratpac2
       shell: bash
