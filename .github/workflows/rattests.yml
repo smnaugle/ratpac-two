@@ -1,0 +1,68 @@
+name: Build RatpacExperiment
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: 
+      image: ratpac/ratpac-two:latest-base
+      options: --user root
+    steps:
+    - name: Checkout Ratpac2
+      uses: actions/checkout@v4
+      with:
+        path: ratpac2
+    
+    - name: Build Ratpac2
+      working-directory: ratpac2
+      shell: bash
+      run: |
+        source /ratpac-setup/env.sh
+        make -j$(nproc)
+
+    - name: Cache build output
+      working-directory: ratpac2
+      uses: actions/cache/save@v4
+      id: cache
+      with:
+        path: install
+        key: install-${{ github.sha }}
+  
+  acrylic_attenuation:
+    runs-on: ubuntu-latest
+    container: 
+      image: ratpac/ratpac-two:latest-base
+      options: --user root
+    steps:
+    - name: Get build cache
+      working-directory: ratpac2
+      uses: actions/cache/restore@v4
+      id: cache
+      with:
+        path: install
+        key: install-${{ github.sha }}
+
+    - name: Run acrylic rattest 
+      working-directory: ratpac2
+      shell: bash
+      run: |
+        source /ratpac-setup/env.sh
+        source ../ratpac2/ratpac.sh
+        python3 $RATSHARE/python/rattest -t test/full/acrylic_attenuation
+      id: test
+      continue-on-error: true
+    - name: upload-result
+      uses: actions/upload-artifact@v4
+      with:
+        name: acrylic_attenuation-result
+        if-no-files-found: error
+        path: |
+          test/full/acrylic_attenuation/*.png
+          test/full/acrylic_attenuation/*.html
+    - name: check-test-result
+      if: steps.test.outcome != 'success'
+      run: exit 1 
