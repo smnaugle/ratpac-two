@@ -73,7 +73,7 @@ jobs:
       run: |
         source /ratpac-setup/env.sh
         source ../ratpac2/ratpac.sh
-        python3 $RATSHARE/python/rattest -t test/full/acrylic_attenuation
+        python3 $RATSHARE/python/rattest.py -t test/full/acrylic_attenuation
       id: test
       continue-on-error: true
     - name: upload-result
