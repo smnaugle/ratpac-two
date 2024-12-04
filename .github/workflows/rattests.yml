@@ -1,4 +1,4 @@
-name: Build RatpacExperiment
+name: rattests
 on:
   push:
     branches: [ main ]
@@ -26,8 +26,8 @@ jobs:
 
     - name: Cache build output
       working-directory: ratpac2
-      uses: actions/cache/save@v4
       id: cache
+      uses: actions/cache/save@v4
       with:
         path: install
         key: install-${{ github.sha }}
@@ -40,8 +40,8 @@ jobs:
     steps:
     - name: Get build cache
       working-directory: ratpac2
-      uses: actions/cache/restore@v4
       id: cache
+      uses: actions/cache/restore@v4
       with:
         path: install
         key: install-${{ github.sha }}
@@ -56,6 +56,7 @@ jobs:
       id: test
       continue-on-error: true
     - name: upload-result
+      working-directory: ratpac2
       uses: actions/upload-artifact@v4
       with:
         name: acrylic_attenuation-result
