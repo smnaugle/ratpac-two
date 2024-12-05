@@ -30,6 +30,7 @@ jobs:
         path: ratpac2
   
   acrylic_attenuation:
+    needs: build
     uses: ./.github/workflows/rattests-workflow.yml
     with:
       rattest-name: acrylic_attenuation
