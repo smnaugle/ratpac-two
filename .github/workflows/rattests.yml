@@ -32,4 +32,4 @@ jobs:
   acrylic_attenuation:
     uses: ./.github/workflows/rattests-workflow.yml
     with:
-      rattests-name: acrylic_attenuation
+      rattest-name: acrylic_attenuation
