@@ -53,15 +53,3 @@ void acrylic_attenuation(std::string event_filename, std::string out_filename) {
   delete event_file;
   delete out_file;
 }
-
-int acrylic_attenuation(std::string event_file, std::string outfile){
-  TFile *infile = new TFile(event_file.c_str(),"READ");
-  TTree *event_ttree = (TTree*)infile->Get("T");
-  TFile *outtfile = new TFile(outfile.c_str(),"RECREATE");
-  make_plots(infile, event_ttree, outtfile);
-  infile->Close();
-  outtfile->Close();
-  delete infile;
-  delete outtfile;
-  return 0;
-}
