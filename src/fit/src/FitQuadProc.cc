@@ -4,8 +4,6 @@
 #include <Randomize.hh>
 #include <array>
 
-// FitQuadProc class should inherit from processor like FitPathProc, but does not need minimizer
-
 namespace RAT {
 
 FitQuadProc::FitQuadProc() : Processor("quadfitter") {}
@@ -14,11 +12,14 @@ void FitQuadProc::BeginOfRun(DS::Run *run) {
   fRun = run;
   fPMTInfo = run->GetPMTInfo();
 
-  DBLinkPtr fit_quad = DB::Get()->GetLink("FIT_QUAD");  // TODO: Add index
-  fNumQuadPoints = fit_quad->GetI("num_points");
-  fMaxQuadPoints = fit_quad->GetI("max_points");
-  fTableCutOff = fit_quad->GetI("table_cut_off");
-  fLightSpeed = fit_quad->GetD("light_speed");
+  DB *db = DB::Get();
+
+  // TODO: Figure out experiment agnostic way to specify index for quad to use
+  DBLinkPtr quad_db = db->GetLink("FIT_QUAD");
+  fNumQuadPoints = quad_db->GetI("num_points");
+  fMaxQuadPoints = quad_db->GetI("max_points");
+  fTableCutOff = quad_db->GetI("table_cut_off");
+  fLightSpeed = quad_db->GetD("light_speed");
 }
 
 // Create a table of all the ways to pick 4 numbers out of n
